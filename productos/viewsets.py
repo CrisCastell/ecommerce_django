@@ -8,7 +8,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 
 class ProductoViewSet(viewsets.ModelViewSet):
-    queryset = Producto.objects.all()
+    queryset = Producto.objects.filter(stock__gt=0)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -52,8 +52,8 @@ class CompraViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
-            return Compra.objects.all()
-        return Compra.objects.filter(cliente=user)
+            return Compra.objects.all().order_by('-fecha')
+        return Compra.objects.filter(cliente=user).order_by('-fecha')
     
     def get_serializer_class(self):
         if self.action == 'create':

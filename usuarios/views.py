@@ -16,24 +16,34 @@ def registro_cliente(request):
             user.is_staff = True
             user.save()
 
-            client_group = Group.objects.get(name='clientes')
-            user.groups.add(client_group)
+            # Si el usuario no es superusuario, agregarlo al grupo "clientes"
+            if not user.is_superuser:
+                client_group = Group.objects.get(name='clientes')
+                user.groups.add(client_group)
 
-            messages.success(request, f'Usuario {user.username} registrado exitosamente como cliente.')
-            return redirect('admin:index')  
+            messages.success(request, f'Usuario {user.username} registrado exitosamente.')
+            return redirect('admin:index')
     else:
         form = UserCreationForm()
-        print(form)
 
     return render(request, 'admin/register.html', {'form': form})
 
 
+# def registro_cliente(request):
+#     if request.method == 'POST':
+#         form = UserCreationForm(request.POST)
+#         if form.is_valid():
+#             user = form.save()
+#             user.is_staff = True
+#             user.save()
 
+#             client_group = Group.objects.get(name='clientes')
+#             user.groups.add(client_group)
 
-def create_client_group():
-    group, created = Group.objects.get_or_create(name='clientes')
-    if created:
-        group.permissions.clear()
+#             messages.success(request, f'Usuario {user.username} registrado exitosamente como cliente.')
+#             return redirect('admin:index')  
+#     else:
+#         form = UserCreationForm()
+#         print(form)
 
-
-create_client_group()
+#     return render(request, 'admin/register.html', {'form': form})

@@ -37,17 +37,27 @@ class ProductoCarritoSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("La cantidad debe ser mayor que 0.")
 
         return data
+    
+    def get_imagen(self, obj):
+
+        if obj.imagen:
+            try:
+                return obj.imagen.url
+            except ValueError:
+                return None
+        return None 
 
     def to_representation(self, instance):
         producto = Producto.objects.get(id=instance['producto_id'])
 
         total_producto = producto.precio * instance['cantidad']
+        imagen = self.get_imagen(producto)
 
         return {
             'id': producto.id,
             'nombre': producto.nombre,
             'precio_unitario': producto.precio,
-            'imagen': producto.imagen.url if producto.imagen.url else None,
+            'imagen': imagen,
             'cantidad': instance['cantidad'],
             'total': total_producto
         }
@@ -113,6 +123,7 @@ class CompraCreateSerializer(serializers.ModelSerializer):
 
       
             producto.stock -= cantidad
+            producto.disponible = producto.stock > 0
             producto.save()
 
             total_compra += total_producto

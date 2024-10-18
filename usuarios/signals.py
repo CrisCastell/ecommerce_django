@@ -1,14 +1,9 @@
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
+from django.db.models.signals import post_migrate
+from django.contrib.auth.models import Group
+from django.dispatch import receiver
 
-# Crear el grupo 'clientes' con permisos limitados
-def create_client_group():
+@receiver(post_migrate)
+def create_client_group(sender, **kwargs):
     group, created = Group.objects.get_or_create(name='clientes')
-
-    for model in ContentType.objects.all():
-        view_perm = Permission.objects.filter(content_type=model, codename__startswith='view_')
-        group.permissions.add(*view_perm)
-
-
-create_client_group()
+    if created:
+        group.permissions.clear() 

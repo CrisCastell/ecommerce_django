@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+    Django Store{% if user.is_superuser %} | Admin{% endif %}
+{% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'admin:index' %}" class="title-header">Django Store{% if user.is_superuser %} | Admin{% endif %}</a></div>
+
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

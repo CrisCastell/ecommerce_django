@@ -38,5 +38,5 @@ El proyecto hace uso tanto de las vistas del admin de Django como del uso de end
 Para levantar el proyecto, simplemente ejecutar los siguientes comandos desde el directorio raíz del proyecto:
 
 ```bash
-docker-compose build
-docker-compose up
+docker build -t ecommerce_senzil .
+docker run -d -p 8000:8000 --name ecommerce_senzil_container ecommerce_senzil

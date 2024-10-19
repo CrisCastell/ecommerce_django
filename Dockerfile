@@ -7,9 +7,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-COPY entrypoint.sh /app/
-COPY entrypoint.sh /usr/local/bin/
+EXPOSE 8000
 
-
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["entrypoint.sh"]
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py loaddata fixtures/auth_fixtures.json fixtures/productos_fixtures.json && python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"]

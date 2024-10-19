@@ -4,7 +4,7 @@ python manage.py migrate --noinput
 python manage.py migrate --noinput
 
 
-python manage.py loaddata fixtures/usuarios_fixture.json fixtures/productos_fixture.json
+python manage.py loaddata fixtures/auth_fixtures.json fixtures/productos_fixtures.json
 
 
 python manage.py collectstatic --noinput

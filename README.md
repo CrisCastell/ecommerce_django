@@ -35,7 +35,10 @@ El proyecto hace uso tanto de las vistas del admin de Django como del uso de end
 
 ## Cómo Levantar el Proyecto
 
-Para levantar el proyecto, simplemente ejecutar los siguientes comandos desde el directorio raíz del proyecto:
+Para levantar el proyecto, seguir los siguientes pasos:
+- Clonar este repositorio
+- Abrir la terminal y ubicarse a la altura de manage.py
+- Ejecutar los siguientes comandos de docker
 
 ```bash
 docker build -t ecommerce_senzil .

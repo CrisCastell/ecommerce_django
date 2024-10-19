@@ -35,7 +35,8 @@ El proyecto hace uso tanto de las vistas del admin de Django como del uso de end
 
 ## Cómo Levantar el Proyecto
 
-Para levantar el proyecto, simplemente ejecuta el siguiente comando desde el directorio raíz del proyecto:
+Para levantar el proyecto, simplemente ejecutar los siguientes comandos desde el directorio raíz del proyecto:
 
 ```bash
+docker-compose build
 docker-compose up

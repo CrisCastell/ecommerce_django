@@ -8,9 +8,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
+COPY fixtures/ /app/fixtures/
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn ecommerce_senzil.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py loaddata fixtures/usuarios_fixture.json fixtures/productos_fixture.json && python manage.py collectstatic --noinput && gunicorn ecommerce_senzil.wsgi:application --bind 0.0.0.0:8000"]

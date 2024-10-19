@@ -1,23 +1,3 @@
-.badge {
-    padding-left: 9px;
-    padding-right: 9px;
-    -webkit-border-radius: 9px;
-    -moz-border-radius: 9px;
-    border-radius: 9px;
-  }
-  
-  .label-warning[href],
-  .badge-warning[href] {
-    background-color: #c67605;
-  }
-  #cart {
-      font-size: 12px;
-      background: #ff0000;
-      color: #fff;
-      padding: 0 5px;
-      vertical-align: top;
-  }
-
 .compra-item{
   color: var(--body-quiet-color) !important;
 }
@@ -27,3 +7,72 @@
     object-fit: cover; 
     object-position: top; 
   }
+
+.cart-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-color: var(--primary); 
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.3s ease;
+}
+
+.cart-button:hover {
+  background-color: var(--secondary); 
+}
+
+.cart-button:focus {
+  outline: none;
+}
+
+.cart-icon {
+  font-size: 24px;
+  margin-right: 10px; 
+  pointer-events: none; 
+
+}
+
+
+/* Estilos del contador */
+.cart-count {
+  background-color: red; /* Color de fondo del contador */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 14px;
+  min-width: 20px; /* Para que siempre tenga una forma redonda con pocos dígitos */
+  text-align: center;
+  position: relative;
+  pointer-events: none; 
+}
+
+
+.cart-button {
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Espaciado para dispositivos pequeños */
+@media (max-width: 600px) {
+  .cart-button {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+
+  .cart-icon {
+      font-size: 20px;
+  }
+
+  .cart-count {
+      font-size: 12px;
+      padding: 3px 6px;
+  }
+}

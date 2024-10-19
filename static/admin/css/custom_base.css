@@ -882,6 +882,9 @@ a.deletelink:focus, a.deletelink:hover {
 #content-main {
     float: left;
     width: 100%;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 700px !important;
 }
 
 #content-related {
@@ -1326,4 +1329,8 @@ a.deletelink:focus, a.deletelink:hover {
 
 #nav-sidebar table {
     width: 100%;
+}
+
+.login .submit-row{
+    padding: 0 !important;
 }

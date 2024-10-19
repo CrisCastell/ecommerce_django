@@ -1,14 +1,17 @@
-from django.contrib.auth.models import Group, Permission
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
+from django.db.models.signals import post_save, post_migrate
+from django.dispatch import receiver
+from django.contrib.auth.models import User, Group
 
-# Crear el grupo 'clientes' con permisos limitados
-def create_client_group():
+@receiver(post_save, sender=User)
+def add_user_to_client_group(sender, instance, created, **kwargs):
+    # Si el usuario es nuevo y no es un superusuario, lo agregamos al grupo "clientes"
+    if created and not instance.is_superuser:
+        client_group, created = Group.objects.get_or_create(name='clientes')
+        instance.groups.add(client_group)
+
+
+@receiver(post_migrate)
+def create_client_group(sender, **kwargs):
     group, created = Group.objects.get_or_create(name='clientes')
-
-    for model in ContentType.objects.all():
-        view_perm = Permission.objects.filter(content_type=model, codename__startswith='view_')
-        group.permissions.add(*view_perm)
-
-
-create_client_group()
+    if created:
+        group.permissions.clear()  # Limpiar permisos solo si el grupo fue creado

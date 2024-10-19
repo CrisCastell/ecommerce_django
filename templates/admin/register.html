@@ -1,11 +1,13 @@
 {% extends "admin/base_site.html" %}
 {% load i18n static %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static "admin/css/login.css" %}">
 {{ form.media }}
 {% endblock %}
 
-{% block bodyclass %}{{ block.super }} registro{% endblock %}
+{% block bodyclass %}{{ block.super }} login{% endblock %}
 
 {% block usertools %}{% endblock %}
 
@@ -32,7 +34,7 @@
 {% endfor %}
 {% endif %}
 
-<div id="content-main">
+<div id="content-main" class="align-self-center">
 
 {% if user.is_authenticated %}
 <p class="errornote">
@@ -44,36 +46,45 @@
 {% endif %}
 
 
-<form method="post">{% csrf_token %}
-  {% csrf_token %}
-  {{ form.as_p }}
-  <div>
-    <a href="{% url 'admin:index' %}">{% translate 'Or Sign In?' %}</a>
-  </div>
-  <button type="submit">Registrar</button>
-</form>
 
-<!-- 
 <form action="{{ app_path }}" method="post" id="register-form">{% csrf_token %}
   <div class="form-row">
     {{ form.username.errors }}
     {{ form.username.label_tag }} {{ form.username }}
+    {{ form.username.help_text }}
   </div>
+
+  <div class="form-row">
+    {{ form.email.errors }}
+    {{ form.email.label_tag }} {{ form.email }}
+    {{ form.email.help_text }}
+  </div>
+
   <div class="form-row">
     {{ form.password1.errors }}
-    {{ form.password1.label_tag }} {{ form.password }}
+    {{ form.password1.label_tag }} {{ form.password1 }}
+    {{ form.password1.help_text }}
     <input type="hidden" name="next" value="{{ next }}">
   </div>
   <div class="form-row">
     {{ form.password2.errors }}
-    {{ form.password2.label_tag }} {{ form.password2 }}
+    {{ form.password2.label_tag }} {{ form.password2 }}<br>
+    {{ form.password2.help_text }}
     <input type="hidden" name="next" value="{{ next }}">
   </div>
-  <div class="submit-row">
-    <input type="submit" value="{% translate 'Log in' %}">
-  </div>
-</form> -->
 
+  <div class="container mt-3">
+    <div class="d-flex d-flex flex-column justify-content-center">
+      <div class="align-self-center">
+        <a class="mb-3" href="{% url 'admin:index' %}">o Inicia sesion</a>
+      </div>
+      <div class="submit-row d-flex justify-content-center mt-3">
+        <input type="submit" value="Registrarse">
+      </div>
+    </div>
+  </div>
+
+</form>
 
 </div>
 {% endblock %}

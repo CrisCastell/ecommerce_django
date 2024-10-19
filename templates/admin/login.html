@@ -59,12 +59,17 @@
     <a href="{{ password_reset_url }}">{% translate 'Forgotten your password or username?' %}</a>
   </div>
   {% endif %}
-  <div>
-    <a href="{% url 'registro_cliente' %}">{% translate 'Or Sign up?' %}</a>
+  <div class="container">
+    <div class="d-flex d-flex flex-column justify-content-center">
+      <div class="align-self-center">
+        <a class="mb-3" href="{% url 'registro_cliente' %}">o Registrate</a>
+      </div>
+      <div class="submit-row d-flex justify-content-center mt-3">
+        <input type="submit" value="{% translate 'Log in' %}">
+      </div>
+    </div>
   </div>
-  <div class="submit-row">
-    <input type="submit" value="{% translate 'Log in' %}">
-  </div>
+
 </form>
 
 

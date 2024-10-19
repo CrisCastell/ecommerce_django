@@ -28,9 +28,9 @@ document.addEventListener('click', function(event) {
 
         // Botón para aumentar la cantidad
         if (boton.classList.contains('aumentar-cantidad')) {
+            const stock = document.getElementById(`stock-seleccionado-${productId}`).textContent;
             let cantidadElemento = document.getElementById(`cantidad-seleccionada-${productId}`);
             cantidad = parseInt(cantidadElemento.textContent);
-            const stock = 10; // Supón que este valor proviene de la API
 
             if (cantidad < stock) {
                 cantidad++;
@@ -95,14 +95,10 @@ function actualizarBotones(cantidad, productId) {
         agregarBoton.style.display = 'none';
         controlesCantidad.style.display = 'inline-block';
 
-        // Deshabilitar el botón "Aumentar" si se alcanza el stock disponible
-        if (cantidad >= stock) {
-            aumentarBoton.style.display = 'none';
-        } else {
-            aumentarBoton.style.display = 'inline-block';
-        }
+        // Ocultar el botón "Aumentar" si se alcanza la cantidad en stock
+        aumentarBoton.style.display = (cantidad >= stock) ? 'none' : 'inline-block';
     } else {
-        // Si la cantidad es 0, mostrar el botón "Agregar al carrito" y ocultar los controles
+        // Si la cantidad es 0, volver a mostrar el botón "Agregar al carrito" y ocultar los botones interectivos
         agregarBoton.style.display = 'inline-block';
         controlesCantidad.style.display = 'none';
     }
@@ -176,40 +172,42 @@ function listarCarritoEnModal() {
 
     const csrfToken = getCsrfToken();
 
-    fetch('/api/productos/filtrar-productos-carrito/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken  
-        },
-        body: JSON.stringify(carrito)
-    })
-    .then(response => response.json())  
-    .then(data => {
-        console.log(data)
-        data.forEach(producto => {  
-            totalCompra += producto.total;  
-            const fila = `
-                <tr>
-                    <td>
-                        <img class="img-small-list" src="${producto.imagen ? producto.imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}" alt="${producto.nombre}" class="img-list-productos" />
-                    </td>
-                    <td>${producto.nombre}</td>
-                    <td>${producto.cantidad}</td>
-                    <td>$${producto.precio_unitario.toFixed(2)}</td>
-                    <td>$${producto.total.toFixed(2)}</td>
-                </tr>
-            `;
-            listaProductosCarrito.insertAdjacentHTML('beforeend', fila);
-            
-        });
 
-        // Mostrar el total de la compra
-        document.getElementById('total-compra').textContent = totalCompra.toFixed(2);
+    if(carrito.length > 0){
+        fetch('/api/productos/filtrar-productos-carrito/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken  
+            },
+            body: JSON.stringify(carrito)
         })
-        .catch(error => {
-            console.error('Error al enviar el carrito:', error);
-    });
+        .then(response => response.json())  
+        .then(data => {
+            data.forEach(producto => {  
+                totalCompra += producto.total;  
+                const fila = `
+                    <tr>
+                        <td>
+                            <img class="img-small-list" src="${producto.imagen ? producto.imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}" alt="${producto.nombre}" class="img-list-productos" />
+                        </td>
+                        <td>${producto.nombre}</td>
+                        <td>${producto.cantidad}</td>
+                        <td>$${producto.precio_unitario.toFixed(2)}</td>
+                        <td>$${producto.total.toFixed(2)}</td>
+                    </tr>
+                `;
+                listaProductosCarrito.insertAdjacentHTML('beforeend', fila);
+                
+            });
+    
+            // Mostrar el total de la compra
+            document.getElementById('total-compra').textContent = totalCompra.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Error al enviar el carrito:', error);
+        });
+    }
 
 }
 
@@ -240,10 +238,15 @@ function manejarCompra() {
 
         localStorage.removeItem('carrito');
 
-        const carritoModal = new bootstrap.Modal(document.getElementById('carritoModal'));
-        carritoModal.hide();
-        listaProductosCarrito.innerHTML = ''; 
+        const carritoModal = document.getElementById('carritoModal');
+        const modalInstance = bootstrap.Modal.getInstance(carritoModal);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+        listaProductosCarrito.innerHTML = '';
+        mostrarCompraExitosa(data.identificador_unico)
         cargarProductos()
+        cargarHistorialCompras()
 
     })
     .catch(error => {
@@ -255,3 +258,12 @@ function manejarCompra() {
 function getCsrfToken() {
     return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
+
+
+function mostrarCompraExitosa(nroCompra) {
+    let nroCompraSpan = document.getElementById('nro-compra-exitosa');
+    nroCompraSpan.innerHTML = nroCompra;
+    let modal = new bootstrap.Modal(document.getElementById('compraExitosaModal'));
+    modal.show();
+  }
+

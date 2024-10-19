@@ -172,40 +172,42 @@ function listarCarritoEnModal() {
 
     const csrfToken = getCsrfToken();
 
-    fetch('/api/productos/filtrar-productos-carrito/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken  
-        },
-        body: JSON.stringify(carrito)
-    })
-    .then(response => response.json())  
-    .then(data => {
-        console.log(data)
-        data.forEach(producto => {  
-            totalCompra += producto.total;  
-            const fila = `
-                <tr>
-                    <td>
-                        <img class="img-small-list" src="${producto.imagen ? producto.imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}" alt="${producto.nombre}" class="img-list-productos" />
-                    </td>
-                    <td>${producto.nombre}</td>
-                    <td>${producto.cantidad}</td>
-                    <td>$${producto.precio_unitario.toFixed(2)}</td>
-                    <td>$${producto.total.toFixed(2)}</td>
-                </tr>
-            `;
-            listaProductosCarrito.insertAdjacentHTML('beforeend', fila);
-            
-        });
 
-        // Mostrar el total de la compra
-        document.getElementById('total-compra').textContent = totalCompra.toFixed(2);
+    if(carrito.length > 0){
+        fetch('/api/productos/filtrar-productos-carrito/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken  
+            },
+            body: JSON.stringify(carrito)
         })
-        .catch(error => {
-            console.error('Error al enviar el carrito:', error);
-    });
+        .then(response => response.json())  
+        .then(data => {
+            data.forEach(producto => {  
+                totalCompra += producto.total;  
+                const fila = `
+                    <tr>
+                        <td>
+                            <img class="img-small-list" src="${producto.imagen ? producto.imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}" alt="${producto.nombre}" class="img-list-productos" />
+                        </td>
+                        <td>${producto.nombre}</td>
+                        <td>${producto.cantidad}</td>
+                        <td>$${producto.precio_unitario.toFixed(2)}</td>
+                        <td>$${producto.total.toFixed(2)}</td>
+                    </tr>
+                `;
+                listaProductosCarrito.insertAdjacentHTML('beforeend', fila);
+                
+            });
+    
+            // Mostrar el total de la compra
+            document.getElementById('total-compra').textContent = totalCompra.toFixed(2);
+            })
+            .catch(error => {
+                console.error('Error al enviar el carrito:', error);
+        });
+    }
 
 }
 
@@ -241,8 +243,10 @@ function manejarCompra() {
         if (modalInstance) {
             modalInstance.hide();
         }
-        listaProductosCarrito.innerHTML = ''; 
+        listaProductosCarrito.innerHTML = '';
+        mostrarCompraExitosa(data.identificador_unico)
         cargarProductos()
+        cargarHistorialCompras()
 
     })
     .catch(error => {
@@ -254,3 +258,12 @@ function manejarCompra() {
 function getCsrfToken() {
     return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 }
+
+
+function mostrarCompraExitosa(nroCompra) {
+    let nroCompraSpan = document.getElementById('nro-compra-exitosa');
+    nroCompraSpan.innerHTML = nroCompra;
+    let modal = new bootstrap.Modal(document.getElementById('compraExitosaModal'));
+    modal.show();
+  }
+

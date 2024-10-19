@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_migrate
 from django.dispatch import receiver
 from django.contrib.auth.models import User, Group
 
@@ -8,3 +8,10 @@ def add_user_to_client_group(sender, instance, created, **kwargs):
     if created and not instance.is_superuser:
         client_group, created = Group.objects.get_or_create(name='clientes')
         instance.groups.add(client_group)
+
+
+@receiver(post_migrate)
+def create_client_group(sender, **kwargs):
+    group, created = Group.objects.get_or_create(name='clientes')
+    if created:
+        group.permissions.clear()  # Limpiar permisos solo si el grupo fue creado

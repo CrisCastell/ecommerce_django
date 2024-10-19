@@ -30,11 +30,14 @@ class ProductoCarritoSerializer(serializers.ModelSerializer):
         try:
             producto = Producto.objects.get(id=data['producto_id'])
         except Producto.DoesNotExist:
-            raise serializers.ValidationError(f"Producto con ID {data['producto_id']} no existe.")
+            raise serializers.ValidationError(f"Producto con ID {data['producto_id']} no existe.", 400)
 
         
         if data['cantidad'] <= 0:
-            raise serializers.ValidationError("La cantidad debe ser mayor que 0.")
+            raise serializers.ValidationError({"error": "La cantidad debe ser mayor que 0."}, code=400)
+        
+        if data['cantidad'] > producto.stock:
+            raise serializers.ValidationError({"error": "Cantidad solicitada supera el stock disponible."}, code=400)
 
         return data
     
@@ -139,4 +142,5 @@ class CompraCreateSerializer(serializers.ModelSerializer):
             "id": instance.id,
             "total": instance.total,
             "fecha": instance.fecha,
+            "identificador_unico": instance.identificador_unico
         }

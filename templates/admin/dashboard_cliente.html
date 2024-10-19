@@ -2,6 +2,21 @@
 {% load static %}
 {% load i18n static %}
 
+{% block carrito_button %}
+{% if not user.is_superuser %}
+
+<div class="">
+  <button class="modal-shower cart-button " id="contenido-carrito">
+    <span class="cart-icon">
+        🛒 
+    </span>
+    <span id='cart' class="cart-count">0</span>
+  </button>
+</div>
+
+{% endif %}
+{% endblock %}
+
 <meta name="csrf-token" content="{{ csrf_token }}">
 
     <div class="row">
@@ -91,3 +106,29 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="compraExitosaModal" tabindex="-1" aria-labelledby="compraExitosaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content modal-custom">
+      <div class="modal-header">
+        <h5 class="modal-title" id="compraExitosaLabel">Compra exitosa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¡La compra <span id="nro-compra-exitosa"></span> ha sido completada exitosamente! Muchas gracias por tu compra.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% block dashboard_cliente_scripts %}
+{% if not user.is_superuser %}
+  <link rel="stylesheet" href="{% static 'admin/css/cart.css' %}">
+  <script src="{% static 'admin/js/cart.js' %}"></script>
+  <script src="{% static 'admin/js/dashboard_cliente.js' %}"></script>
+{% endif %}
+{% endblock %}

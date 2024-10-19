@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'productos.apps.ProductosConfig',
     'usuarios.apps.UsuariosConfig',
     'rest_framework',
+    'django_extensions',
 
 ]
 

@@ -61,7 +61,6 @@ function cargarHistorialCompras(){
     fetch('/api/compras/')
     .then(response => response.json())  // Convertir la respuesta a JSON
     .then(data => {
-
         const historialContainer = document.getElementById('historial-compras-list');
         if (historialContainer.innerHTML != '') historialContainer.innerHTML = "";
 
@@ -75,7 +74,7 @@ function cargarHistorialCompras(){
             compraItem.innerHTML = `
                 <div class="compra-item d-flex justify-content-between align-items-center">
                     <div class="">
-                        <h5>Compra #${compra.id}-8765</h5>
+                        <h5>Compra #${compra.identificador_unico}</h5>
                         <p>${compra.fecha}</p>
                         <p>$ ${compra.total}</p>
                         <a class="btn" id="detalle-compra" data-id="${compra.id}"><i class="fas fa-link"></i>Ver Compra</a>
@@ -121,7 +120,6 @@ function mostrarDetalleProducto(boton){
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             // Una vez que recibimos los datos del producto, llenamos el modal
             let contenido = `
                 <h5>${data.nombre}</h5>
@@ -158,14 +156,29 @@ function mostrarDetalleCompra(boton){
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+
+            
+            let compraProductos = ""
+
+            data.productos.forEach(producto => {
+                compraProductos += `<li class="list-group-item">
+                                        <div class="container d-flex justify-content-between align-items-center">
+                                            <img class="img-small-list" alt="${producto.nombre}" src="${producto.imagen ? producto.imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}">
+                                            <p>${producto.nombre}</p>
+                                            <p>${producto.nombre_categoria}</p>
+                                            <p>Precio: $ ${producto.precio}</p>
+                                            
+                                        </div>
+                                    </li>`
+            })
+
             // Una vez que recibimos los datos del producto, llenamos el modal
             let contenido = `
-                <h5>Orden Nro:</strong> ${data.id}</h5>
+                <h5>Orden Nro:</strong> ${data.identificador_unico}</h5>
                 <p><strong>Fecha:</strong> ${data.fecha}</p>
                 <p><strong>Costo total:</strong> $${data.total}</p>
-                <img src="${data.productos[0].imagen ? data.productos[0].imagen : 'https://media.s-bol.com/mO7MJqVMgJLA/550x550.jpg'}" alt="${data.productos[0].nombre}" class="img-fluid"/>
-            `;
+                <ul class="list-group>${compraProductos}</ul>
+                `;
 
             // Colocamos el contenido dentro del modal
             document.getElementById('detalle-compra-container').innerHTML = contenido;

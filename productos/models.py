@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+import uuid
 # Create your models here.
 
 class Categoria(models.Model):
@@ -39,11 +40,16 @@ class Compra(models.Model):
     cliente = models.CharField(max_length=100)
     fecha = models.DateTimeField(auto_now_add=True)
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    identificador_unico = models.CharField(max_length=8, unique=True, editable=False)  
 
     def __str__(self):
         return str(self.id)
     
 
+    def save(self, *args, **kwargs):
+        if not self.identificador_unico:
+            self.identificador_unico = str(uuid.uuid4())[:8]
+        super().save(*args, **kwargs)
 
 class CompraProducto(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE)

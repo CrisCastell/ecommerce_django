@@ -27,7 +27,6 @@ class ProductoViewSet(viewsets.ModelViewSet):
     def filtrar_productos_carrito(self, request):
         
         articulos = request.data
-        print(articulos)
 
         if not articulos:
             return Response({'error': 'El carrito está vacío.'}, status=status.HTTP_400_BAD_REQUEST)

@@ -22,10 +22,9 @@ El proyecto hace uso tanto de las vistas del admin de Django como del uso de end
 
 ## Requisitos Previos
 - **Docker**: Se debe tener instalado Docker para ejecutar el contenedor con solo un comando
-- **Admin**: Crear un superusuario que servira para visualizar la vista de admins.
 
 ## Explicacion de la tienda
-- Para ingresar como usuario cliente se debe registrar desde la vista principal del proyecto o dentro del admin (la shell de django tambien puede ser opcion)
+- Para ingresar como usuario cliente se debe registrar desde la vista de registro, accesible en el login
 - Una vez ingresado con un usuario cliente se visualizara el listado de articulos de la tienda.
 - Se podra ver el detalle de cada producto de manera dinamica y tambien agregar y quitar elementos del carrito
 - Para comprar hay que presionar el boton de carrito en la esquina superior izquierda de la lista y abrira un modal con el resumen del carrito
